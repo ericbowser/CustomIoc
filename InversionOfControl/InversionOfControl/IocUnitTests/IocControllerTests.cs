@@ -17,8 +17,7 @@ namespace InversionOfControl.IocControllerTests
 
     public IocControllerTests()
     {
-      container = new IocContainer();
-      Bootstrapper.Initialise();
+      container = Bootstrapper.Initialise();
     }
 
     /// <summary>
@@ -89,8 +88,6 @@ namespace InversionOfControl.IocControllerTests
     [Fact]
     public void IocTestInjectUserController()
     {
-      container.RegisterType<IUserRepository, UserRepository>();
-      container.RegisterType<UserController, UserController>();
       var controller = container.Resolve<UserController>();
       var result = controller.Index() as ViewResult;
       Assert.NotNull(result);
@@ -102,10 +99,6 @@ namespace InversionOfControl.IocControllerTests
     [Fact]
     public void IocTestInjectInsuranceController()
     {
-      container.RegisterType<IInsuranceRepository, InsuranceRepository>();
-      container.RegisterType<IUserRepository, UserRepository>();
-      container.RegisterType<IEmailRepository, EmailRepository>();
-      container.RegisterType<InsuranceController, InsuranceController>();
       var controller = container.Resolve<InsuranceController>();
       var result = controller.Index() as ViewResult;
       Assert.NotNull(result);
@@ -118,9 +111,6 @@ namespace InversionOfControl.IocControllerTests
     [Fact]
     public void IocTestInjectDeductibleController()
     {
-      container.RegisterType<DeductibleController, DeductibleController>();
-      container.RegisterType<IDeductibleRepository, DeductibleRepository>();
-      container.RegisterType<IInsuranceRepository, InsuranceRepository>();
       var controller = container.Resolve<DeductibleController>();
       var result = controller.Index() as ViewResult;
       Assert.NotNull(result);

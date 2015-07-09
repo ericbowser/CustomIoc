@@ -32,6 +32,8 @@ namespace InversionOfControl.Models
     /// <param name="lifeCycle">LifeCycle lifeCycle</param>
     public void Register(Type from, Type to, LifeCycle lifeCycle = LifeCycle.Transient)
     {
+      var checkDups = registrations.Where(x => x.From == from).FirstOrDefault();
+      registrations.Remove(checkDups);
       registrations.Add(new Register(to, from, lifeCycle));
     }
 
@@ -47,7 +49,7 @@ namespace InversionOfControl.Models
       {
         Register(typeof(F), typeof(T), lifeCycle);
       }
-      catch 
+      catch
       {
       }
     }
@@ -72,7 +74,7 @@ namespace InversionOfControl.Models
       if (type == null)
         throw new ArgumentNullException(type.Name);
 
-      object[] isTrue = IocContainer.Container.registrations.Where(x => x.From == type).ToArray();
+      Register[] isTrue = IocContainer.Container.registrations.Where(x => x.From == type).ToArray();
 
       return isTrue.Count() == 0 ? false : true;
     }
@@ -97,12 +99,12 @@ namespace InversionOfControl.Models
     /// <returns>object</returns>
     public object Resolve(Type type, string instanceName = null)
     {
-      var instance = registrations.Where(x => x.From == type).FirstOrDefault();
+      var instance = IocContainer.Container.registrations.Where(x => x.From == type).FirstOrDefault();
       if (instance != null)
       {
         return GetInstance(instance);
       }
-      else 
+      else
       {
         throw new InvalidOperationException("The type was not found. Do you need to add a mapping?");
       }
